@@ -5,10 +5,10 @@ using HttpListener = DuckC2.Server.Models.HttpListener;
 
 namespace DuckC2.Server.Factories
 {
-    public class HttpListnerFactory : IListenerFactory
+    public class HttpListenerFactory : IListenerFactory
     {
 
-        public HttpListnerFactory()
+        public HttpListenerFactory()
         {
         }
 
@@ -18,7 +18,7 @@ namespace DuckC2.Server.Factories
 
         public IListener Create(dynamic args)
         {
-            var listener = new HttpListener(args.Name, args.BindingPort);
+            var listener = new HttpListener(args.Name.ToString(), args.BindingPort.ToString());
            
             return listener;
         }

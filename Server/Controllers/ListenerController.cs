@@ -70,9 +70,9 @@ namespace DuckC2.Server.Controllers
 
             repository.Add(listener);
 
-            var root = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}";
+             var root = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}";
             var path = $"{root}/{listener.Name}";
-            return Created(path, listener);
+            return Ok(listener);
         }
 
 

@@ -1,4 +1,6 @@
 ﻿using DuckC2.Server.Abstractions.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DuckC2.Server.Models
 {
@@ -7,13 +9,15 @@ namespace DuckC2.Server.Models
         private CancellationTokenSource tokenSource;
         public string Name { get; }
         public string BindPort { get; }
-        public HttpListener(string name,string bindPort)
+        private HttpListenerImplantHandler implantHandler;
+        public HttpListener(string name, string bindPort)
         {
             Name = name;
             BindPort = bindPort;
             tokenSource = new CancellationTokenSource();
+            implantHandler = new HttpListenerImplantHandler();
         }
-      
+
 
         public async Task Start()
         {
@@ -22,21 +26,27 @@ namespace DuckC2.Server.Models
                     {
                         host.UseUrls($"http://0.0.0.0:{BindPort}");
                         host.Configure(ConfigureApp);
+                        host.ConfigureServices(ConfigureServices);
                     });
 
             var host = hostBuilder.Build();
 
-           await host.RunAsync(tokenSource.Token);
+
+            await host.RunAsync(tokenSource.Token);
         }
 
-        
+        private void ConfigureServices(IServiceCollection services)
+        {
+        }
+
 
         private void ConfigureApp(IApplicationBuilder app)
         {
             app.UseRouting();
             app.UseEndpoints(e =>
             {
-                e.MapControllerRoute("/", "/", new { controller = "HttpListener", action = "HandleImplant" });
+                e.MapGet("/", async Task<Results<Ok<Duckling>, NotFound>> (HttpContext context) =>
+                    await implantHandler.HandleCheckin(context) is Duckling duckling ? TypedResults.Ok(duckling) : TypedResults.NotFound());
             });
         }
 

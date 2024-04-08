@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddSingleton<IListenerRepository, InMemoryListenerRepository>();
-builder.Services.AddSingleton<IListenerFactory, HttpListnerFactory>();
+builder.Services.AddSingleton<IListenerFactory, HttpListenerFactory>();
 
 
 var app = builder.Build();
